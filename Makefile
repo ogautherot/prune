@@ -8,13 +8,18 @@ endif
 OBJS=obj/main.o
 TARGET=prune$(EXT)
 
+CFLAGS = -Wall -Wextra 
+
 .PHONY: all
 all: ${TARGET}
 
 ${TARGET}: ${OBJS}
-	${CC} -o ${TARGET} ${OBJS}
+	${CC} -o ${TARGET} ${OBJS} -lssl -lcrypto
 
 obj/%.o: src/%.c
 	mkdir -p obj
-	${CC} -c -o $@ $<
+	${CC} -c ${CFLAGS} -o $@ $<
 
+.PHONY: clean
+clean:
+	rm -f obj/* ${TARGET}
