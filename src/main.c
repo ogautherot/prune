@@ -68,10 +68,11 @@ int CompareFiles() {
     prunelen = fread(prunebuf, 1, BUFSIZE, fprune);
     reflen = fread(refbuf, 1, BUFSIZE, fref);
     if (prunelen != reflen) {
-      printf("??? %s: %d != %d\n", prunepath, prunelen, reflen);
+      printf("??? %s: length %d != %d\n", prunepath, prunelen, reflen);
       return -1;
     }
-    if (!memcmp(prunebuf, refbuf, prunelen)) {
+    if (0 != memcmp(prunebuf, refbuf, prunelen)) {
+      printf("??? %s: content mismatch\n", prunepath);
       return -1;
     }
     if (reflen < BUFSIZE) {
