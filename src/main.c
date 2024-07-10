@@ -56,10 +56,10 @@ int CompareFiles() {
 
   // Check input files
   if (NULL == fref) {
-    printf("!!! Unable to open %s\n", refpath);
+    fprintf(stderr, "!!! Unable to open %s\n", refpath);
   }
   if (NULL == fprune) {
-    printf("!!! Unable to open %s\n", prunepath);
+    fprintf(stderr, "!!! Unable to open %s\n", prunepath);
   }
 
   SHA256_Init(&ctx);
@@ -68,11 +68,11 @@ int CompareFiles() {
     prunelen = fread(prunebuf, 1, BUFSIZE, fprune);
     reflen = fread(refbuf, 1, BUFSIZE, fref);
     if (prunelen != reflen) {
-      printf("??? %s: length %d != %d\n", prunepath, prunelen, reflen);
+      fprintf(stderr, "??? %s: length %d != %d\n", prunepath, prunelen, reflen);
       return -1;
     }
     if (0 != memcmp(prunebuf, refbuf, prunelen)) {
-      printf("??? %s: content mismatch\n", prunepath);
+      fprintf(stderr, "??? %s: content mismatch\n", prunepath);
       return -1;
     }
     if (reflen < BUFSIZE) {
@@ -120,9 +120,9 @@ int ParseTree() {
     strcpy(refend, name);
     if (0 == stat(prunepath, &prunestat)) {
       if (S_ISREG(prunestat.st_mode)) {
-        printf("  * %s --> %d\n", prunepath, CompareFiles());
+        fprintf(stderr, "  * %s --> %d\n", prunepath, CompareFiles());
       } else if (S_ISDIR(prunestat.st_mode)) {
-        printf("%s is a dir\n", prunepath);
+        fprintf(stderr, "%s is a dir\n", prunepath);
         ParseTree();
       }
     }
@@ -181,9 +181,7 @@ int ParseArgs(ArgsStruct *args, int ac, char *av[]) {
     help(args);
     exit(1);
   }
-  printf("progname %s\n", args->progname);
-  printf("refpath %s\n", args->refpath);
-  printf("prunepath %s\n", args->prunepath);
+
   return 0;
 }
 
